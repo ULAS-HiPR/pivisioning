@@ -1,5 +1,7 @@
 # pivisioning
 
+[![Mach25 Build and Test](https://github.com/ULAS-HiPR/pivisioning/actions/workflows/mach25_build.yml/badge.svg)](https://github.com/ULAS-HiPR/pivisioning/actions/workflows/mach25_build.yml)
+
 Zero touch provisioning of custom NixOS images for Raspberry Pi CanSats. This allows us to create reproducible OS builds via Nix and QEMU which can be flashed to an SD card and once given power it is ready to fly. Nix supports cross compilation which is leveraged by the QEMU Container to build the image for the Raspberry Pi whether your host machine is ARM/x86.
 
 ## Prerequisites
