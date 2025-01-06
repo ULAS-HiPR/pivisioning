@@ -15,10 +15,11 @@ Zero touch provisioning of custom NixOS images for Raspberry Pi CanSats. This al
 
 1.  Clone this repo 
     
-        ```sh
-        git clone git@github.com:ULAS-HiPR/pivisioning.git
-        cd pivisioning
-        ```
+    ```sh
+    git clone git@github.com:ULAS-HiPR/pivisioning.git
+    cd pivisioning
+    ```
+
 2.  Install Docker (optionally Docker Desktop) on your host machine [see here](https://docs.docker.com/get-docker/)
 
 3.  Install Nix on your host machine [see here](https://nixos.org/download/)
