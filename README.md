@@ -5,7 +5,6 @@ Zero touch provisioning of custom NixOS images for Raspberry Pi CanSats. This al
 ## Prerequisites
 
 -   Docker 
--   Docker Compose 
 -   QEMU 
 -   Nix
 
@@ -26,10 +25,11 @@ Zero touch provisioning of custom NixOS images for Raspberry Pi CanSats. This al
 
 ## Usage
 
-1.  Use `docker-compose` to mount `output` and run the container:
+1.  Use `docker` to build the NixOS image for the Raspberry Pi and mount the `output` directory to save the `.img` file:
 
     ```sh
-    docker-compose up
+    docker build -t mach25 -f mach25/Dockerfile --build-arg GOOS=linux --build-arg GOARCH=arm --build-arg RPI_VERSION=4 . && \
+docker run --rm -it -v $(pwd)/output:/output mach25
     ```
 
 2.  Check the `output` directory for the `.img` file, and flash with balenaEtcher or equivalent.
