@@ -2,7 +2,7 @@
 
 {
   imports = [
-    <nixpkgs/nixos/modules/installer/cd-dvd/sd-image-aarch64.nix>
+    <nixpkgs/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix>
     ./sd-image-init.nix
   ];
 
@@ -24,30 +24,33 @@
   # Enable OpenSSH out of the box.
   services.sshd.enable = true;
 
-  # The installer starts with a "nixos" user to allow installation, so add the SSH key to
-  # that user. Note that the key is, at the time of writing, put in `/etc/ssh/authorized_keys.d`
-  # users.extraUsers.nixos.openssh.authorizedKeys.keys = [
-  #   "ssh-ed25519 ..."
-  # ];
+  # allow dev to ssh remotely at login
 
-  # Use a default root SSH login.
-  # services.openssh.permitRootLogin = "yes";
-  # users.users.root.password = "nixos";
+  # create a dev usr that is not root but has ssh and exec access
+  users.users.dev = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
+    createHome = true;
+    home = "/home/dev";
+    shell = pkgs.bashInteractive;
+    password = "dev";
+  };
 
   # Wireless networking (1). You might want to enable this if your Pi is not attached via Ethernet.
-  # networking.wireless = {
-  #  enable = true;
-  #  interfaces = [ "wlan0" ];
-  #  networks = {
-  #    "replace-with-my-wifi-ssid" = {
-  #      psk = "replace-with-my-wifi-password";
-  #    };
-  #  };
-  # };
+  networking.wireless = {
+   enable = true;
+   interfaces = [ "wlan0" ];
+   networks = {
+     "coldspot" = {
+       psk = "helloworld1";
+     };
+   };
+  };
 
   # Wireless networking (2). Enables `wpa_supplicant` on boot.
-  # systemd.services.wpa_supplicant.wantedBy = lib.mkOverride 10 [ "default.target" ];
+  systemd.services.wpa_supplicant.wantedBy = lib.mkOverride 10 [ "default.target" ];
 
-  # NTP time sync.
-  services.timesyncd.enable = true;
+  system.stateVersion = "24.05"; 
+  services.timesyncd.enable = true; # NOTE: Sync time with NTP servers.
+  networking.firewall.allowedTCPPorts = [ 22 ];
 }

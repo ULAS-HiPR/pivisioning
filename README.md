@@ -1,32 +1,43 @@
-# nixos-rpi-sd-image
+# pivisioning
 
-A convenient way to create custom Raspberry Pi NixOS SD images.
+Zero touch provisioning of custom NixOS images for Raspberry Pi CanSats. This allows us to create reproducible OS builds via Nix and QEMU which can be flashed to an SD card and once given power it is ready to fly. Nix supports cross compilation which is leveraged by the QEMU Container to build the image for the Raspberry Pi whether your host machine is ARM/x86.
 
-So far this has been tested to work with Docker Desktop for Mac and also Docker
-on Linux.
+## Prerequisites
 
-## Setup
+-   Docker 
+-   QEMU 
+-   Nix
 
-1.  Install QEMU into the host machine:
+- Internet connection (for Nix to download dependencies)
+- A Raspberry Pi 3 (other models may work but are untested)
+- An SD card (8GB or larger recommended)
 
+1.  Clone this repo 
+    
+    ```sh
+    git clone git@github.com:ULAS-HiPR/pivisioning.git
+    cd pivisioning
+    ```
+
+2.  Install Docker (optionally Docker Desktop) on your host machine [see here](https://docs.docker.com/get-docker/)
+
+3.  Install Nix on your host machine [see here](https://nixos.org/download/)
+
+4.  Install QEMU on your host machine via `docker`:
+    
     ```sh
     docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     ```
+## Usage
 
-2.  Clone this repo.
-
-3.  Configure `nixos-rpi-sd-image/sd-image.nix` and
-    `nixos-rpi-sd-image/configuration.nix` with your own settings.
-
-## Run
-
-1.  Use `docker-compose` to mount `output` and run the container:
+1.  Use `docker` to build the NixOS image for the Raspberry Pi and mount the `output` directory to save the `.img` file:
 
     ```sh
-    docker-compose up
+    docker build -t mach25 -f mach25/Dockerfile --build-arg GOOS=linux --build-arg GOARCH=arm --build-arg RPI_VERSION=4 . && \
+docker run --rm -it -v $(pwd)/output:/output mach25
     ```
 
-2.  Check the `output` directory for the `.img` file.
+2.  Check the `output` directory for the `.img` file, and flash with balenaEtcher or equivalent.
 
 ## SD Image Usage
 
@@ -40,25 +51,3 @@ on Linux.
     ```sh
     journalctl -f -u sd-image-init.service
     ```
-
-4.  Enjoy!
-
-## Credit
-
-This was possible mostly in part because of the blog posts and code of
-[@Robertof][], but also the contributors to `nixos-generators` and the wiki for
-NixOS on ARM.
-
-[NixOS on ARM > Building your own image > Compiling through QEMU][]
-
-[NixOS on a Raspberry Pi: creating a custom SD image with OpenSSH out of the box by @Robertof][]
-
-[NixOS Docker-based SD image builder][]
-
-[nixos-generators - one config, multiple formats][]
-
-[@Robertof]: https://github.com/Robertof
-[NixOS on ARM > Building your own image > Compiling through QEMU]: https://nixos.wiki/wiki/NixOS_on_ARM#Compiling_through_QEMU
-[NixOS on a Raspberry Pi: creating a custom SD image with OpenSSH out of the box by @Robertof]: https://rbf.dev/blog/2020/05/custom-nixos-build-for-raspberry-pis/
-[NixOS Docker-based SD image builder]: https://github.com/Robertof/nixos-docker-sd-image-builder
-[nixos-generators - one config, multiple formats]: https://github.com/nix-community/nixos-generators
