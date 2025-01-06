@@ -38,7 +38,7 @@ jobs:
     - name: Run Docker Container
       run: |
         mkdir -p output
-        docker run --rm -it -v ${{ github.workspace }}/output:/output mach25
+        docker run --rm -v ${{ github.workspace }}/output:/output mach25
 
     - name: Upload SD Image Artifact
       uses: actions/upload-artifact@v3
