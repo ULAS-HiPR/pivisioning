@@ -23,6 +23,11 @@ Zero touch provisioning of custom NixOS images for Raspberry Pi CanSats. This al
 
 3.  Install Nix on your host machine [see here](https://nixos.org/download/)
 
+4.  Install QEMU on your host machine via `docker`:
+    
+    ```sh
+    docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    ```
 ## Usage
 
 1.  Use `docker` to build the NixOS image for the Raspberry Pi and mount the `output` directory to save the `.img` file:

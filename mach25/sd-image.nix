@@ -2,7 +2,7 @@
 
 {
   imports = [
-    <nixpkgs/nixos/modules/installer/cd-dvd/sd-image-aarch64.nix>
+    <nixpkgs/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix>
     ./sd-image-init.nix
   ];
 
@@ -23,6 +23,8 @@
 
   # Enable OpenSSH out of the box.
   services.sshd.enable = true;
+
+  # allow dev to ssh remotely at login
 
   # create a dev usr that is not root but has ssh and exec access
   users.users.dev = {
@@ -48,7 +50,7 @@
   # Wireless networking (2). Enables `wpa_supplicant` on boot.
   systemd.services.wpa_supplicant.wantedBy = lib.mkOverride 10 [ "default.target" ];
 
-  system.stateVersion = "24.05"; # Did you read the comment?
-  # NTP time sync.
-  services.timesyncd.enable = true;
+  system.stateVersion = "24.05"; 
+  services.timesyncd.enable = true; # NOTE: Sync time with NTP servers.
+  networking.firewall.allowedTCPPorts = [ 22 ];
 }
