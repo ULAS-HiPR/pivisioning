@@ -12,5 +12,4 @@
   boot.loader.generic-extlinux-compatible.enable = true; # Enables the generation of /boot/extlinux/extlinux.conf
  
   boot.kernelModules = [ "i2c-dev" "i2c-bcm2708" "gpio" ];
-  system.stateVersion = "24.05";
 }
